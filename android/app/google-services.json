@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "138927912921",
+    "firebase_url": "https://supercool-rental-default-rtdb.firebaseio.com",
+    "project_id": "supercool-rental",
+    "storage_bucket": "supercool-rental.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:138927912921:android:864e1ce921c5ca44464bc8",
+        "android_client_info": {
+          "package_name": "com.example.codelab_friendlychat_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "138927912921-kgq575i9sdl51tnmttcdll7a436le6en.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyo_6G7RaDGt5ewtGhv6O4-6tCjd3AUgo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "138927912921-kgq575i9sdl51tnmttcdll7a436le6en.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:138927912921:android:883cb7cf119ad531464bc8",
+        "android_client_info": {
+          "package_name": "com.example.fan_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "138927912921-kgq575i9sdl51tnmttcdll7a436le6en.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyo_6G7RaDGt5ewtGhv6O4-6tCjd3AUgo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "138927912921-kgq575i9sdl51tnmttcdll7a436le6en.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:138927912921:android:adaacc9868fb5e36464bc8",
+        "android_client_info": {
+          "package_name": "com.example.message_board"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "138927912921-kgq575i9sdl51tnmttcdll7a436le6en.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyo_6G7RaDGt5ewtGhv6O4-6tCjd3AUgo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "138927912921-kgq575i9sdl51tnmttcdll7a436le6en.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

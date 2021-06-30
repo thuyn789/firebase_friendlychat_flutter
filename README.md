@@ -17,4 +17,4 @@ samples, guidance on mobile development, and a full API reference.
 
 
 ## Disclaimer
-I do not own the code in this repository.  All the rights and ownership belong to its respective owners and contributors.  The purpose of this repository is for me to learn about making a messaging app and for submission to my course.
+I do not own the friendly chat code in this repository.  All the rights and ownership belong to its respective owners and contributors.  The purpose of this repository is for me to learn about making a messaging app and for submission to my course.
