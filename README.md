@@ -17,6 +17,7 @@ A chat app with beautiful UIs in Flutter
 - https://firebase.flutter.dev/docs/firestore/usage
 - https://www.youtube.com/playlist?list=PL4cUxeGkcC9jLYyp2Aoh6hcWuxFDX6PBJ
 - https://www.youtube.com/watch?v=fi2WkznwWbc
+- https://codelabs.developers.google.com/codelabs/flutter
 
 
 ## Github Link
@@ -100,6 +101,16 @@ var firebaseConfig = {
 - After login, the app will bring user to chat screen
 
 
+## Basic Database Structure for chat messages in Firebase Database
+
+- chat_message (1) --> UserID (2) --> fromUserID_toUserID (3) --> individual messages
+
+   + (1) --> root collection that stores all messages from all users
+   + (2) --> user collection that stores all users who use the app and send messages
+   + (3) --> conversation collection that stores conversations between 2 users
+   + (4) --> messages collection that stores all individual messages exchanged between 2 users
+
+
 ## Login Credentials for Demo Accounts
 
 - Admin: admin@admin.com, password
@@ -110,5 +121,5 @@ var firebaseConfig = {
 ## Bugs and Not Working
 
 - Not Working: 
-    + The message from Firebase has to be loaded manually
-    + Only for 1 user.
+    + The message from Firebase has to be loaded manually.  Will implement fixes later
+    + Only for 1 user.  Will implement fixes later
