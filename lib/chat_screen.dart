@@ -1,15 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:codelab_friendlychat_flutter/app_services/login.dart';
 import 'package:codelab_friendlychat_flutter/cloud_services/firebase_services.dart';
 
 class ChatMessage extends StatelessWidget {
-  ChatMessage({required this.text, required this.animationController});
+  ChatMessage({
+    required this.text,
+    required this.animationController,
+    required this.name,
+    required this.date
+  });
 
   final String text;
   final AnimationController animationController;
-
-  final String _name = 'Your Name';
+  final String name;
+  final String date;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +29,7 @@ class ChatMessage extends StatelessWidget {
           children: [
             Container(
               margin: const EdgeInsets.only(right: 16.0),
-              child: CircleAvatar(child: Text(_name[0])),
+              child: CircleAvatar(child: Text(name[0])),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,9 +40,9 @@ class ChatMessage extends StatelessWidget {
                 ),
                 Row(
                   children: <Widget>[
-                    Text(_name, style: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),),
+                    Text(name, style: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),),
                     SizedBox(width: 40),
-                    Text('date & time', style: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),),
+                    Text(date, style: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),),
                   ],
                 ),
               ],
@@ -49,7 +55,17 @@ class ChatMessage extends StatelessWidget {
 }
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({Key? key}) : super(key: key);
+  const ChatScreen({ required this.userObj, required this.signInMethod});
+
+  //User Object - A map of DocumentSnapshot
+  //Contain user information, name, uid, and email
+  final userObj;
+
+  //Sign in method
+  //1 - Email/password
+  //2 - Google social sign in
+  //3 - Anonymous login
+  final int signInMethod;
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -85,6 +101,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                         ),
                         TextButton(
                           onPressed: () {
+                            Navigator.pop(context, true);
                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
                             AuthServices().signOut();
                           },
@@ -150,7 +167,10 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               margin: EdgeInsets.symmetric(horizontal: 4.0),
               child: IconButton(
                   icon: const Icon(Icons.send),
-                  onPressed: () => _handleSubmitted(_textController.text)),
+                  onPressed: () async {
+                    //await retrieveChatMessages();
+                    _handleSubmitted(_textController.text);
+                  }),
             ),
           ],
         ),
@@ -158,8 +178,46 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     );
   }
 
-  void _handleSubmitted(String text) {
+  //Retrieve all chat message
+  Future<void> retrieveChatMessages() async {
+    String userID = widget.userObj['user_id'];
+
+    await FirebaseFirestore.instance
+        .collection('chat_message')
+        .doc(userID)
+        .collection(userID)//This is where conversations between user are stored
+        .orderBy('timestamp', descending: true,)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        final messageObj = doc.data() as Map<String, dynamic>;
+        //print(messageObj['fromUserID']);
+        //print(messageObj['fromName']);
+        //print(messageObj['message']);
+        //print(messageObj['timestamp']);
+        var message = ChatMessage(
+          text: messageObj['message'],
+          animationController: AnimationController(
+            // NEW
+            duration: const Duration(milliseconds: 300), // NEW
+            vsync: this,
+          ),
+          name: messageObj['fromName'],
+          date: messageObj['timestamp'],
+        );
+        setState(() {
+          _messages.insert(0, message);
+        });
+
+        _focusNode.requestFocus();
+        message.animationController.forward();
+      });
+    });
+  }
+
+  void _handleSubmitted(String text) async {
     _textController.clear();
+
     var message = ChatMessage(
       text: text,
       animationController: AnimationController(
@@ -167,12 +225,45 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         duration: const Duration(milliseconds: 300), // NEW
         vsync: this,
       ),
+      name: widget.userObj['first_name'],
+      date: _dateHandler(""),
     );
     setState(() {
       _messages.insert(0, message);
     });
     _focusNode.requestFocus();
     message.animationController.forward();
+
+    //Send message to database
+    await _sendMessageToDb(text);
+  }
+
+  Future<void> _sendMessageToDb(String message) async {
+    String userID = widget.userObj['user_id'];
+
+    final DocumentReference database = FirebaseFirestore.instance
+        .collection('chat_message')
+        .doc(widget.userObj['user_id']);
+
+    await database.collection(userID).add(
+        {
+          'fromUserID': userID,
+          'fromName': widget.userObj['first_name'],
+          'message': message,
+          'timestamp': _dateHandler(""),
+          'toUserID': "",
+          'toName': "",
+        });
+  }
+
+  String _dateHandler(String info) {
+    DateTime date = new DateTime.now();
+    if (info == "date") {
+      return "${date.month}-${date.day}-${date.year}";
+    } else if (info == "time") {
+      return "${date.hour}:${date.minute}";
+    }
+    return "${date.month}-${date.day}-${date.year}  ${date.hour}:${date.minute}";
   }
 
   @override

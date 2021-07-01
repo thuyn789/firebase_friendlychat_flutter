@@ -102,7 +102,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   );
                   if (successful) {
                     //when successful, navigate user to chat screen page
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatScreen()));
+                    String? userID = FirebaseAuth.instance.currentUser!.uid;
+                    DocumentSnapshot database = await AuthServices().retrieveUserData(userID);
+                    final userObj = database.data() as Map<String, dynamic>;
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatScreen(userObj: userObj, signInMethod: 0,)));
                   } else {
                     //when not successful, popup alert
                     //and prompt user to try again

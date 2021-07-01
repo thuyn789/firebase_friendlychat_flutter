@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthServices {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore database = FirebaseFirestore.instance;
+  final database = FirebaseFirestore.instance;
 
   //Login with existing username and password credential
   Future<bool> login(String email, String password) async {
@@ -90,11 +90,21 @@ class AuthServices {
 
   //Retrieve all messages
   Future<void> retrieveMessages(String collection) async {
-    database.collection(collection).get().then((QuerySnapshot querySnapshot) {
+    database
+        .collection(collection)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         print(doc);
       });
     });
+  }
+
+  Future<DocumentSnapshot> retrieveUserData(String userID) async {
+    return await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userID)
+        .get();
   }
 
   //Check user role

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -106,10 +107,11 @@ class _LoginState extends State<LoginPage> {
                   bool successful = await AuthServices().login(_email.text, _password.text);
                   if (successful) {
                     //when successful, navigate user to home page
-                    String accountType = await AuthServices()
-                        .checkUser(FirebaseAuth.instance.currentUser!.uid);
+                    String? userID = FirebaseAuth.instance.currentUser!.uid;
+                    DocumentSnapshot database = await AuthServices().retrieveUserData(userID);
+                    final userObj = database.data() as Map<String, dynamic>;
                     Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => ChatScreen()));
+                        MaterialPageRoute(builder: (context) => ChatScreen(userObj: userObj, signInMethod: 0,)));
                   } else {
                     //when not successful, popup alert
                     //and prompt user to try again
@@ -149,7 +151,8 @@ class _LoginState extends State<LoginPage> {
                   await AuthServices()
                       .signInWithGoogle()
                       .then((UserCredential credential) {
-                    MaterialPageRoute(builder: (context) => ChatScreen());
+                    final userObj = credential.user as Map<String, dynamic>;
+                    MaterialPageRoute(builder: (context) => ChatScreen(userObj: userObj, signInMethod: 1,));
                   });
                 },
                 child: Text(
