@@ -12,16 +12,16 @@ A chat app with beautiful UIs in Flutter
 
 ## Credits
 
-https://www.filledstacks.com/post/building-flutter-login-and-sign-up-forms/
-https://firebase.flutter.dev/docs/auth/usage
-https://firebase.flutter.dev/docs/firestore/usage
-https://www.youtube.com/playlist?list=PL4cUxeGkcC9jLYyp2Aoh6hcWuxFDX6PBJ
-https://www.youtube.com/watch?v=fi2WkznwWbc
+- https://www.filledstacks.com/post/building-flutter-login-and-sign-up-forms/
+- https://firebase.flutter.dev/docs/auth/usage
+- https://firebase.flutter.dev/docs/firestore/usage
+- https://www.youtube.com/playlist?list=PL4cUxeGkcC9jLYyp2Aoh6hcWuxFDX6PBJ
+- https://www.youtube.com/watch?v=fi2WkznwWbc
 
 
 ## Github Link
 
-https://github.com/thuyn789/fan_app
+https://github.com/thuyn789/firebase_friendlychat_flutter
 
 
 ## Supported Platform
