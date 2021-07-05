@@ -24,7 +24,7 @@ class AuthServices {
   }
 
   //Login with google credential
-  Future<UserCredential> signInWithGoogle() async {
+  Future<User?> signInWithGoogle() async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -38,8 +38,23 @@ class AuthServices {
       idToken: googleAuth.idToken,
     );
 
-    // Once signed in, return the UserCredential
-    return await _auth.signInWithCredential(credential);
+    UserCredential userCredential = await _auth.signInWithCredential(credential);
+
+    final gUser = userCredential.user;
+
+    if(userCredential.additionalUserInfo!.isNewUser){
+      await database.collection("users").doc(gUser!.uid).set(
+          {
+            'user_id': gUser.uid.trim(),
+            'name': gUser.displayName!.trim(),
+            'email': gUser.email!.trim(),
+            'user_role': 'customer'.trim(),
+          });
+    }
+
+    // Once signed in, return the google user
+    // back to login screen for further processing
+    return gUser;
   }
 
   //Register and store new user information
@@ -90,7 +105,7 @@ class AuthServices {
 
   //Retrieve all messages
   Future<void> retrieveMessages(String collection) async {
-    database
+    await database
         .collection(collection)
         .get()
         .then((QuerySnapshot querySnapshot) {
@@ -100,10 +115,18 @@ class AuthServices {
     });
   }
 
+  //Retrieve specific user data
   Future<DocumentSnapshot> retrieveUserData(String userID) async {
     return await FirebaseFirestore.instance
         .collection('users')
         .doc(userID)
+        .get();
+  }
+
+  //Retrieve all user data
+  Future<QuerySnapshot> retrieveAllUser(String userID) async {
+    return await FirebaseFirestore.instance
+        .collection('users')
         .get();
   }
 

@@ -9,7 +9,7 @@ class ChatMessage extends StatelessWidget {
     required this.text,
     required this.animationController,
     required this.name,
-    required this.date
+    required this.date,
   });
 
   final String text;
@@ -77,6 +77,13 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   final FocusNode _focusNode = FocusNode();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadMessages();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -128,6 +135,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           children: [
             Flexible(
               child: ListView.builder(
+                physics: BouncingScrollPhysics(),
                 padding: EdgeInsets.all(8.0),
                 reverse: true,
                 itemBuilder: (_, int index) => _messages[index],
@@ -155,7 +163,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             Flexible(
               child: TextField(
                 controller: _textController,
-                onSubmitted: _handleSubmitted,
+                //onSubmitted: _handleSubmitted,
                 decoration: InputDecoration.collapsed(
                   hintText: 'Send a message',
                   fillColor: Colors.blueGrey,
@@ -168,8 +176,13 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               child: IconButton(
                   icon: const Icon(Icons.send),
                   onPressed: () async {
-                    //await retrieveChatMessages();
-                    _handleSubmitted(_textController.text);
+                    String message = _textController.text.trim();
+                    if(message.isEmpty){
+                      print("Empty message");
+                      return null;
+                    } else {
+                      _handleSubmitted(_textController.text);
+                    }
                   }),
             ),
           ],
@@ -179,32 +192,30 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 
   //Retrieve all chat message
-  Future<void> retrieveChatMessages() async {
+  Future<void> _loadMessages() async {
     String userID = widget.userObj['user_id'];
 
     await FirebaseFirestore.instance
         .collection('chat_message')
         .doc(userID)
         .collection(userID)//This is where conversations between user are stored
-        .orderBy('timestamp', descending: true,)
+        .orderBy('timestamp',)
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         final messageObj = doc.data() as Map<String, dynamic>;
-        //print(messageObj['fromUserID']);
-        //print(messageObj['fromName']);
-        //print(messageObj['message']);
-        //print(messageObj['timestamp']);
+
         var message = ChatMessage(
           text: messageObj['message'],
           animationController: AnimationController(
             // NEW
-            duration: const Duration(milliseconds: 300), // NEW
+            duration: const Duration(milliseconds: 0), // NEW
             vsync: this,
           ),
           name: messageObj['fromName'],
           date: messageObj['timestamp'],
         );
+
         setState(() {
           _messages.insert(0, message);
         });
@@ -228,9 +239,11 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       name: widget.userObj['first_name'],
       date: _dateHandler(""),
     );
+
     setState(() {
       _messages.insert(0, message);
     });
+
     _focusNode.requestFocus();
     message.animationController.forward();
 

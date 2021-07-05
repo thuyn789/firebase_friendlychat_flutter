@@ -150,8 +150,8 @@ class _LoginState extends State<LoginPage> {
                 onPressed: () async {
                   await AuthServices()
                       .signInWithGoogle()
-                      .then((UserCredential credential) {
-                    final userObj = credential.user as Map<String, dynamic>;
+                      .then((User? user) {
+                    final userObj = user as Map<String, dynamic>;
                     MaterialPageRoute(builder: (context) => ChatScreen(userObj: userObj, signInMethod: 1,));
                   });
                 },
