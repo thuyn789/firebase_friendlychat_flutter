@@ -99,13 +99,13 @@ var firebaseConfig = {
 ## Basic App Structure
 
 - The root widget: main.dart
-
-- After login, the app will bring user to chat screen
+- After login, the app will bring user to a screen to choose contact for messaging
+- main.dart -> choose_contact.dart -> chat_screen.dart
 
 
 ## Basic Database Structure for chat messages in Firebase Database
 
-- chat_message (1) --> UserID (2) --> fromUserID_toUserID (3) --> individual messages
+- chat_message (1) --> UserID (2) --> recipientID (3) --> individual messages
 
    + (1) --> root collection that stores all messages from all users
    + (2) --> user collection that stores all users who use the app and send messages
