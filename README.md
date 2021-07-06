@@ -122,6 +122,4 @@ var firebaseConfig = {
 
 ## Bugs and Not Working
 
-- Not Working: 
-    + The message from Firebase has to be loaded manually.  Will implement fixes later
-    + Only for 1 user.  Will implement fixes later
+- Not Working: Stream for messages is not working correctly.  Will implement fix.
