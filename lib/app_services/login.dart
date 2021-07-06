@@ -107,8 +107,7 @@ class _LoginState extends State<LoginPage> {
                   bool successful = await AuthServices().login(_email.text.trim(), _password.text.trim());
                   if (successful) {
                     //when successful, navigate user to home page
-                    String? userID = FirebaseAuth.instance.currentUser!.uid;
-                    DocumentSnapshot database = await AuthServices().retrieveUserData(userID);
+                    DocumentSnapshot database = await AuthServices().retrieveUserData();
                     final userObj = database.data() as Map<String, dynamic>;
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => ChooseContact(userObj: userObj, signInMethod: 0,)));

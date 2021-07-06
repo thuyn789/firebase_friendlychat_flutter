@@ -102,8 +102,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   );
                   if (successful) {
                     //when successful, navigate user to chat screen page
-                    String? userID = FirebaseAuth.instance.currentUser!.uid;
-                    DocumentSnapshot database = await AuthServices().retrieveUserData(userID);
+                    DocumentSnapshot database = await AuthServices().retrieveUserData();
                     final userObj = database.data() as Map<String, dynamic>;
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChooseContact(userObj: userObj, signInMethod: 0,)));
                   } else {

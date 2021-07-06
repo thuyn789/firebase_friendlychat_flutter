@@ -103,10 +103,10 @@ class AuthServices {
   }
 
   //Retrieve specific user data
-  Future<DocumentSnapshot> retrieveUserData(String userID) async {
+  Future<DocumentSnapshot> retrieveUserData() async {
     return await FirebaseFirestore.instance
         .collection('users')
-        .doc(userID)
+        .doc(_auth.currentUser!.uid)
         .get();
   }
 }
