@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthServices {
@@ -103,46 +102,11 @@ class AuthServices {
     await _auth.signOut();
   }
 
-  //Retrieve all messages
-  Future<void> retrieveMessages(String collection) async {
-    await database
-        .collection(collection)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
-        print(doc);
-      });
-    });
-  }
-
   //Retrieve specific user data
   Future<DocumentSnapshot> retrieveUserData(String userID) async {
     return await FirebaseFirestore.instance
         .collection('users')
         .doc(userID)
         .get();
-  }
-
-  //Retrieve all user data
-  Future<QuerySnapshot> retrieveAllUser(String userID) async {
-    return await FirebaseFirestore.instance
-        .collection('users')
-        .get();
-  }
-
-  //Check user role
-  Future<String> checkUser(String userID) async {
-    try {
-      return await database
-          .collection('users')
-          .doc(userID)
-          .get()
-          .then((DocumentSnapshot documentSnapshot) {
-        return documentSnapshot["user_role"];
-      });
-    } catch (e) {
-      print(e);
-      return "customer".trim();
-    }
   }
 }

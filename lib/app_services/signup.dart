@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:codelab_friendlychat_flutter/cloud_services/firebase_services.dart';
-import 'package:codelab_friendlychat_flutter/chat_screen.dart';
+import 'package:codelab_friendlychat_flutter/choose_contact.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -105,7 +105,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     String? userID = FirebaseAuth.instance.currentUser!.uid;
                     DocumentSnapshot database = await AuthServices().retrieveUserData(userID);
                     final userObj = database.data() as Map<String, dynamic>;
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatScreen(userObj: userObj, signInMethod: 0,)));
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChooseContact(userObj: userObj, signInMethod: 0,)));
                   } else {
                     //when not successful, popup alert
                     //and prompt user to try again

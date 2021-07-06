@@ -20,7 +20,8 @@ class ChatMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizeTransition(
-      sizeFactor: CurvedAnimation(parent: animationController, curve: Curves.easeOut),
+      sizeFactor:
+          CurvedAnimation(parent: animationController, curve: Curves.easeOut),
       axisAlignment: 0.0,
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 10.0),
@@ -36,13 +37,24 @@ class ChatMessage extends StatelessWidget {
               children: [
                 Container(
                   margin: EdgeInsets.only(top: 5.0),
-                  child: Text(text, style: TextStyle(fontSize: 20.0),),
+                  child: Text(
+                    text,
+                    style: TextStyle(fontSize: 20.0),
+                  ),
                 ),
                 Row(
                   children: <Widget>[
-                    Text(name, style: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),),
+                    Text(
+                      name,
+                      style: TextStyle(
+                          fontSize: 14.0, fontStyle: FontStyle.italic),
+                    ),
                     SizedBox(width: 40),
-                    Text(date, style: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),),
+                    Text(
+                      date,
+                      style: TextStyle(
+                          fontSize: 14.0, fontStyle: FontStyle.italic),
+                    ),
                   ],
                 ),
               ],
@@ -55,7 +67,11 @@ class ChatMessage extends StatelessWidget {
 }
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({ required this.userObj, required this.signInMethod});
+  const ChatScreen({
+    required this.userObj,
+    required this.signInMethod,
+    required this.recipient,
+  });
 
   //User Object - A map of DocumentSnapshot
   //Contain user information, name, uid, and email
@@ -66,6 +82,9 @@ class ChatScreen extends StatefulWidget {
   //2 - Google social sign in
   //3 - Anonymous login
   final int signInMethod;
+
+  //Recipient
+  final recipient;
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -78,19 +97,26 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    // TODO: implement initState
     _loadMessages();
   }
 
   @override
   Widget build(BuildContext context) {
+    /*final Stream<QuerySnapshot> _messageStream = FirebaseFirestore.instance
+        .collection('chat_message')
+        .doc(widget.userObj['user_id'])
+        .collection(widget.recipient['user_id'])
+        .snapshots();*/
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orangeAccent[100],
         title: Text(
           'FriendlyChat',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blueAccent),
+          style:
+              TextStyle(fontWeight: FontWeight.bold, color: Colors.blueAccent),
         ),
         actions: <Widget>[
           TextButton.icon(
@@ -109,7 +135,10 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                         TextButton(
                           onPressed: () {
                             Navigator.pop(context, true);
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()));
                             AuthServices().signOut();
                           },
                           child: Text('Yes'),
@@ -118,10 +147,14 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     );
                   });
             },
-            icon: Icon(Icons.person, color: Colors.blueAccent,),
+            icon: Icon(
+              Icons.person,
+              color: Colors.blueAccent,
+            ),
             label: Text(
               'Sign Out?',
-              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blueAccent),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.blueAccent),
             ),
             style: TextButton.styleFrom(
               primary: Colors.white,
@@ -130,26 +163,25 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         ],
       ),
       body: Container(
-        decoration: BoxDecoration(color: Colors.grey[200]),
-        child: Column(
-          children: [
-            Flexible(
-              child: ListView.builder(
-                physics: BouncingScrollPhysics(),
-                padding: EdgeInsets.all(8.0),
-                reverse: true,
-                itemBuilder: (_, int index) => _messages[index],
-                itemCount: _messages.length,
+          decoration: BoxDecoration(color: Colors.grey[200]),
+          child: Column(
+            children: <Widget>[
+              Flexible(
+                child: ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  padding: EdgeInsets.all(8.0),
+                  reverse: true,
+                  itemBuilder: (_, int index) => _messages[index],
+                  itemCount: _messages.length,
+                ),
               ),
-            ),
-            Divider(height: 1.0),
-            Container(
-              decoration: BoxDecoration(color: Theme.of(context).cardColor),
-              child: _buildTextComposer(),
-            ),
-          ],
-        ),
-      ),
+              Divider(height: 1.0),
+              Container(
+                decoration: BoxDecoration(color: Theme.of(context).cardColor),
+                child: _buildTextComposer(),
+              ),
+            ],
+          )),
     );
   }
 
@@ -177,7 +209,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                   icon: const Icon(Icons.send),
                   onPressed: () async {
                     String message = _textController.text.trim();
-                    if(message.isEmpty){
+                    if (message.isEmpty) {
                       print("Empty message");
                       return null;
                     } else {
@@ -194,12 +226,16 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   //Retrieve all chat message
   Future<void> _loadMessages() async {
     String userID = widget.userObj['user_id'];
+    String recipientID = widget.recipient['user_id'];
 
     await FirebaseFirestore.instance
         .collection('chat_message')
         .doc(userID)
-        .collection(userID)//This is where conversations between user are stored
-        .orderBy('timestamp',)
+        .collection(
+            recipientID) //This is where conversations between user are stored
+        .orderBy(
+          'timestamp',
+        )
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
@@ -253,20 +289,27 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   Future<void> _sendMessageToDb(String message) async {
     String userID = widget.userObj['user_id'];
+    String recipientID = widget.recipient['user_id'];
 
-    final DocumentReference database = FirebaseFirestore.instance
-        .collection('chat_message')
-        .doc(widget.userObj['user_id']);
+    final database = FirebaseFirestore.instance.collection('chat_message');
 
-    await database.collection(userID).add(
-        {
-          'fromUserID': userID,
-          'fromName': widget.userObj['first_name'],
-          'message': message,
-          'timestamp': _dateHandler(""),
-          'toUserID': "",
-          'toName': "",
-        });
+    await database.doc(userID).collection(recipientID).add({
+      'fromUserID': userID,
+      'fromName': widget.userObj['first_name'],
+      'message': message,
+      'timestamp': _dateHandler(""),
+      'toUserID': recipientID,
+      'toName': widget.recipient['first_name'],
+    });
+
+    await database.doc(recipientID).collection(userID).add({
+      'fromUserID': userID,
+      'fromName': widget.userObj['first_name'],
+      'message': message,
+      'timestamp': _dateHandler(""),
+      'toUserID': recipientID,
+      'toName': widget.recipient['first_name'],
+    });
   }
 
   String _dateHandler(String info) {
@@ -279,9 +322,13 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     return "${date.month}-${date.day}-${date.year}  ${date.hour}:${date.minute}";
   }
 
+  String _generateChatID(String id1, String id2) {
+    return '$id1-$id2';
+  }
+
   @override
   void dispose() {
-    for (var message in _messages){
+    for (var message in _messages) {
       message.animationController.dispose();
     }
     super.dispose();

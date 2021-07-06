@@ -18,6 +18,8 @@ A chat app with beautiful UIs in Flutter
 - https://www.youtube.com/playlist?list=PL4cUxeGkcC9jLYyp2Aoh6hcWuxFDX6PBJ
 - https://www.youtube.com/watch?v=fi2WkznwWbc
 - https://codelabs.developers.google.com/codelabs/flutter
+- https://www.youtube.com/watch?v=wHIcJDQbBFs
+- https://medium.com/flutter-community/a-chat-application-flutter-firebase-1d2e87ace78f
 
 
 ## Github Link
