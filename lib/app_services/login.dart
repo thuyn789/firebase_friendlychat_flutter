@@ -104,7 +104,7 @@ class _LoginState extends State<LoginPage> {
                 //When clicked, the app will contact firebase for authentication
                 //using user's inputted login credential
                 onPressed: () async {
-                  bool successful = await AuthServices().login(_email.text, _password.text);
+                  bool successful = await AuthServices().login(_email.text.trim(), _password.text.trim());
                   if (successful) {
                     //when successful, navigate user to home page
                     String? userID = FirebaseAuth.instance.currentUser!.uid;
