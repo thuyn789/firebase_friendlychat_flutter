@@ -122,4 +122,4 @@ var firebaseConfig = {
 
 ## Bugs and Not Working
 
-- Not Working: Stream for messages is not working correctly.  Will implement fix.
+- Everything should work as expected
