@@ -109,4 +109,14 @@ class AuthServices {
         .doc(_auth.currentUser!.uid)
         .get();
   }
+
+  //Create a stream that listens to message changes
+  Stream<QuerySnapshot> messageStream(String userID, String recipientID) {
+    return FirebaseFirestore.instance
+        .collection('chat_message')
+        .doc(userID)
+        .collection(recipientID)
+        .orderBy('sendAt', descending: true)
+        .snapshots();
+  }
 }
